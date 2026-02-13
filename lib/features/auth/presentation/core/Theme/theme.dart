@@ -49,9 +49,8 @@ class AppTheme {
       bodyLarge: TextStyle(fontSize: 16),
       bodyMedium: TextStyle(fontSize: 14),
     ),
-
-    inputDecorationTheme: _inputDecorationTheme,
-    elevatedButtonTheme: _elevatedButtonTheme,
+    // Dynamic ElevatedButtons
+    elevatedButtonTheme: _elevatedButtonTheme(isDark: false),
   );
 
   // ===============================
@@ -99,39 +98,40 @@ class AppTheme {
       bodyLarge: TextStyle(fontSize: 16),
       bodyMedium: TextStyle(fontSize: 14),
     ),
-
-    inputDecorationTheme: _inputDecorationTheme,
-    elevatedButtonTheme: _elevatedButtonTheme,
-  );
-
-  // ===============================
-  // INPUT DECORATION
-  // ===============================
-  static final InputDecorationTheme
-  _inputDecorationTheme = InputDecorationTheme(
-    filled: true,
-    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-    border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-    enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-    focusedBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(12),
-      borderSide: const BorderSide(width: 2),
-    ),
+    // Dynamic ElevatedButtons
+    elevatedButtonTheme: _elevatedButtonTheme(isDark: true),
   );
 
   // ===============================
   // BUTTONS
   // ===============================
-  static final ElevatedButtonThemeData _elevatedButtonTheme =
-      ElevatedButtonThemeData(
-        style: ButtonStyle(
-          padding: WidgetStateProperty.all(
-            const EdgeInsets.symmetric(vertical: 16),
-          ),
-          shape: WidgetStateProperty.all(
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          ),
-          elevation: WidgetStateProperty.all(0),
+  static ElevatedButtonThemeData _elevatedButtonTheme({required bool isDark}) {
+    return ElevatedButtonThemeData(
+      style: ButtonStyle(
+        backgroundColor: WidgetStateProperty.resolveWith<Color>((states) {
+          if (states.contains(WidgetState.disabled)) {
+            return isDark
+                ? AppColors.darkPrimaryContainer
+                : AppColors.primaryContainer;
+          }
+          if (states.contains(WidgetState.pressed)) {
+            return isDark
+                ? AppColors.darkPrimary.withOpacity(0.8)
+                : AppColors.primary.withOpacity(0.8);
+          }
+          return isDark ? AppColors.darkPrimary : AppColors.primary;
+        }),
+        foregroundColor: WidgetStateProperty.resolveWith<Color>((states) {
+          return isDark ? Colors.black : Colors.white;
+        }),
+        padding: WidgetStateProperty.all(
+          const EdgeInsets.fromLTRB(40, 16, 48, 16),
         ),
-      );
+        shape: WidgetStateProperty.all(
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        ),
+        elevation: WidgetStateProperty.all(0),
+      ),
+    );
+  }
 }

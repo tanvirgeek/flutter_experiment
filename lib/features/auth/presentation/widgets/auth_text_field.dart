@@ -25,6 +25,9 @@ class _AuthTextFieldState extends State<AuthTextField> {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final inputTheme = Theme.of(context).inputDecorationTheme;
+
     return TextFormField(
       controller: widget.controller,
       keyboardType: widget.keyboardType,
@@ -32,14 +35,30 @@ class _AuthTextFieldState extends State<AuthTextField> {
       validator: widget.validator,
       decoration: InputDecoration(
         labelText: widget.label,
+        filled: inputTheme.filled,
+        fillColor: cs.surface,
+        contentPadding:
+            inputTheme.contentPadding ??
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: cs.outline),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: cs.outline),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: cs.primary, width: 2),
+        ),
         suffixIcon: widget.isPassword
             ? IconButton(
-                onPressed: () {
-                  setState(() {
-                    _obscure = !_obscure;
-                  });
-                },
-                icon: Icon(_obscure ? Icons.visibility : Icons.visibility_off),
+                onPressed: () => setState(() => _obscure = !_obscure),
+                icon: Icon(
+                  _obscure ? Icons.visibility : Icons.visibility_off,
+                  color: cs.onSurfaceVariant,
+                ),
               )
             : null,
       ),
