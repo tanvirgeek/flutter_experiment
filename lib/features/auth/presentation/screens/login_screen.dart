@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_experiment/features/auth/presentation/core/Theme/theme_text_extension.dart';
+import 'package:flutter_experiment/features/auth/presentation/core/validator/validators.dart';
 import 'package:flutter_experiment/features/auth/presentation/widgets/auth_text_field.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -14,6 +15,12 @@ class _LoginScreenState extends State<LoginScreen> {
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+
+  void _onSubmit() {
+    if (_formKey.currentState!.validate()) {
+      debugPrint("Login Success");
+    }
+  }
 
   @override
   void dispose() {
@@ -50,20 +57,26 @@ class _LoginScreenState extends State<LoginScreen> {
                       AuthTextField(
                         controller: _nameController,
                         label: "Full Name",
+                        validator: Validators.fullName,
                       ),
                       const SizedBox(height: 12),
                       AuthTextField(
                         controller: _emailController,
                         label: "Email",
+                        validator: Validators.email,
                       ),
                       const SizedBox(height: 12),
                       AuthTextField(
                         controller: _passwordController,
                         label: "Password",
+                        isPassword: true,
+                        validator: Validators.password,
                       ),
                       const SizedBox(height: 12),
                       ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          _onSubmit();
+                        },
                         child: const Text("Sign Up"),
                       ),
                     ],
