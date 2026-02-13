@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_experiment/features/auth/presentation/core/Theme/colors.dart';
+import 'package:flutter_experiment/core/Theme/colors.dart';
 
 class AppTheme {
   AppTheme._();
