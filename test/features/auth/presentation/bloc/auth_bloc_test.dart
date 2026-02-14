@@ -9,34 +9,47 @@ import 'package:flutter_experiment/features/auth/presentation/bloc/auth_event.da
 import 'package:flutter_experiment/features/auth/presentation/bloc/auth_state.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:flutter_experiment/features/auth/domain/usecases/refresh_token_usecase.dart';
+import 'package:flutter_experiment/features/auth/data/datasource/auth_local_datasource.dart';
 
+// Mocks
 class MockRegisterUseCase extends Mock implements RegisterUsecase {}
 
 class MockLoginUseCase extends Mock implements LoginUsecase {}
 
 class MockCheckAuthUsecase extends Mock implements CheckAuthUseCase {}
 
+class MockRefreshUsecase extends Mock implements RefreshTokenUsecase {}
+
+class MockAuthLocalDataSource extends Mock implements AuthLocalDataSource {}
+
 void main() {
   late AuthBloc bloc;
   late MockRegisterUseCase mockUseCase;
   late MockLoginUseCase mockLoginUseCase;
   late MockCheckAuthUsecase mockCheckAuthUseCase;
+  late MockRefreshUsecase mockRefreshUsecase;
+  late MockAuthLocalDataSource mockLocalDataSource;
 
   setUp(() {
     mockUseCase = MockRegisterUseCase();
     mockLoginUseCase = MockLoginUseCase();
     mockCheckAuthUseCase = MockCheckAuthUsecase();
+    mockRefreshUsecase = MockRefreshUsecase();
+    mockLocalDataSource = MockAuthLocalDataSource();
+
     bloc = AuthBloc(
       loginUsecase: mockLoginUseCase,
       registerUseCase: mockUseCase,
       checkAuthUseCase: mockCheckAuthUseCase,
+      refreshTokenUsecase: mockRefreshUsecase,
+      localDataSource: mockLocalDataSource,
     );
   });
 
   const email = "test@gmail.com";
   const password = "123456";
   const name = "John";
-
   final entity = RegisterResponse(message: "Success");
 
   blocTest<AuthBloc, AuthState>(

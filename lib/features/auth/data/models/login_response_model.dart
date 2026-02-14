@@ -3,6 +3,10 @@ import 'package:flutter_experiment/features/auth/domain/entities/login_response.
 
 class LoginRequestModel extends LoginRequest {
   LoginRequestModel({required super.email, required super.password});
+
+  Map<String, dynamic> toJson() {
+    return {"email": email, "password": password};
+  }
 }
 
 class LoginResponseModel extends LoginResponse {

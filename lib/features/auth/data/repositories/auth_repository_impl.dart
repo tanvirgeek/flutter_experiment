@@ -2,6 +2,7 @@ import 'package:flutter_experiment/features/auth/data/datasource/auth_local_data
 import 'package:flutter_experiment/features/auth/data/datasource/auth_remote_datasource.dart';
 import 'package:flutter_experiment/features/auth/data/models/login_response_model.dart';
 import 'package:flutter_experiment/features/auth/data/models/register_response_model.dart';
+import 'package:flutter_experiment/features/auth/domain/entities/auth_tokens.dart';
 import 'package:flutter_experiment/features/auth/domain/entities/login_response.dart';
 import 'package:flutter_experiment/features/auth/domain/entities/register_response.dart';
 import 'package:flutter_experiment/features/auth/domain/repositories/auth_repository.dart';
@@ -16,11 +17,6 @@ class AuthRepositoryImpl implements AuthRepository {
   });
 
   @override
-  Future<RegisterResponse> register({required RegisterRequestModel data}) {
-    return remoteDataSource.register(data: data);
-  }
-
-  @override
   Future<LoginResponse> login({required LoginRequestModel data}) async {
     final response = await remoteDataSource.login(data: data);
     await localDataSource.saveTokens(
@@ -31,8 +27,25 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
+  Future<RegisterResponse> register({required RegisterRequestModel data}) {
+    return remoteDataSource.register(data: data);
+  }
+
+  @override
   Future<bool> isLoggedIn() async {
-    final token = await localDataSource.getAccessToken();
+    final token = await localDataSource.getRefreshToken();
     return token != null;
+  }
+
+  @override
+  Future<AuthTokens> refreshToken({required String refreshToken}) async {
+    final tokens = await remoteDataSource.refreshToken(
+      refreshToken: refreshToken,
+    );
+    await localDataSource.saveTokens(
+      accessToken: tokens.accessToken,
+      refreshToken: tokens.refreshToken,
+    );
+    return tokens;
   }
 }
