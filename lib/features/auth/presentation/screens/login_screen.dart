@@ -8,6 +8,7 @@ import 'package:flutter_experiment/features/auth/presentation/bloc/auth_event.da
 import 'package:flutter_experiment/features/auth/presentation/bloc/auth_state.dart';
 import 'package:flutter_experiment/features/auth/presentation/screens/register_screen.dart';
 import 'package:flutter_experiment/features/auth/presentation/widgets/auth_text_field.dart';
+import 'package:flutter_experiment/features/blogs/presentation/screens/blogs_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -43,9 +44,9 @@ class _LoginScreenState extends State<LoginScreen> {
     return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is LoginSuccess) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(const SnackBar(content: Text("Success")));
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => const BlogsScreen()),
+          );
         }
 
         if (state is AuthFailure) {

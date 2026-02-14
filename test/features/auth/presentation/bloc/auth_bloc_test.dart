@@ -1,6 +1,7 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_experiment/core/error/exceptions.dart';
 import 'package:flutter_experiment/features/auth/domain/entities/register_response.dart';
+import 'package:flutter_experiment/features/auth/domain/usecases/check_auth_usecase.dart';
 import 'package:flutter_experiment/features/auth/domain/usecases/login_usecase.dart';
 import 'package:flutter_experiment/features/auth/domain/usecases/register_usecase.dart';
 import 'package:flutter_experiment/features/auth/presentation/bloc/auth_bloc.dart';
@@ -13,17 +14,22 @@ class MockRegisterUseCase extends Mock implements RegisterUsecase {}
 
 class MockLoginUseCase extends Mock implements LoginUsecase {}
 
+class MockCheckAuthUsecase extends Mock implements CheckAuthUseCase {}
+
 void main() {
   late AuthBloc bloc;
   late MockRegisterUseCase mockUseCase;
   late MockLoginUseCase mockLoginUseCase;
+  late MockCheckAuthUsecase mockCheckAuthUseCase;
 
   setUp(() {
     mockUseCase = MockRegisterUseCase();
     mockLoginUseCase = MockLoginUseCase();
+    mockCheckAuthUseCase = MockCheckAuthUsecase();
     bloc = AuthBloc(
       loginUsecase: mockLoginUseCase,
       registerUseCase: mockUseCase,
+      checkAuthUseCase: mockCheckAuthUseCase,
     );
   });
 

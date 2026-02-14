@@ -1,4 +1,5 @@
 import 'package:flutter_experiment/core/error/exceptions.dart';
+import 'package:flutter_experiment/features/auth/data/datasource/auth_local_datasource.dart';
 import 'package:flutter_experiment/features/auth/data/datasource/auth_remote_datasource.dart';
 import 'package:flutter_experiment/features/auth/data/models/register_response_model.dart';
 import 'package:flutter_experiment/features/auth/data/repositories/auth_repository_impl.dart';
@@ -7,13 +8,20 @@ import 'package:mocktail/mocktail.dart';
 
 class MockRemoteDataSource extends Mock implements AuthRemoteDataSource {}
 
+class MockLocalDataSource extends Mock implements AuthLocalDataSource {}
+
 void main() {
   late AuthRepositoryImpl repository;
   late MockRemoteDataSource mockDataSource;
+  late MockLocalDataSource mockLocalDataSource;
 
   setUp(() {
     mockDataSource = MockRemoteDataSource();
-    repository = AuthRepositoryImpl(remoteDataSource: mockDataSource);
+    mockLocalDataSource = MockLocalDataSource();
+    repository = AuthRepositoryImpl(
+      remoteDataSource: mockDataSource,
+      localDataSource: mockLocalDataSource,
+    );
   });
 
   const email = "test@gmail.com";

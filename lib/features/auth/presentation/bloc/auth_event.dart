@@ -18,3 +18,5 @@ class LoginRequested extends AuthEvent {
 
   LoginRequested({required this.email, required this.password});
 }
+
+class CheckAuthStatusEvent extends AuthEvent {}

@@ -1,3 +1,4 @@
+import 'package:flutter_experiment/features/auth/data/datasource/auth_local_datasource.dart';
 import 'package:flutter_experiment/features/auth/data/datasource/auth_remote_datasource.dart';
 import 'package:flutter_experiment/features/auth/data/models/login_response_model.dart';
 import 'package:flutter_experiment/features/auth/data/models/register_response_model.dart';
@@ -7,8 +8,12 @@ import 'package:flutter_experiment/features/auth/domain/repositories/auth_reposi
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource remoteDataSource;
+  final AuthLocalDataSource localDataSource;
 
-  AuthRepositoryImpl({required this.remoteDataSource});
+  AuthRepositoryImpl({
+    required this.remoteDataSource,
+    required this.localDataSource,
+  });
 
   @override
   Future<RegisterResponse> register({required RegisterRequestModel data}) {
@@ -16,7 +21,18 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<LoginResponse> login({required LoginRequestModel data}) {
-    return remoteDataSource.login(data: data);
+  Future<LoginResponse> login({required LoginRequestModel data}) async {
+    final response = await remoteDataSource.login(data: data);
+    await localDataSource.saveTokens(
+      accessToken: response.accessToken,
+      refreshToken: response.refreshToken,
+    );
+    return response;
+  }
+
+  @override
+  Future<bool> isLoggedIn() async {
+    final token = await localDataSource.getAccessToken();
+    return token != null;
   }
 }

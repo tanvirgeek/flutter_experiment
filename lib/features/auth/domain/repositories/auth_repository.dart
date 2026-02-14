@@ -6,4 +6,5 @@ import 'package:flutter_experiment/features/auth/domain/entities/register_respon
 abstract interface class AuthRepository {
   Future<RegisterResponse> register({required RegisterRequestModel data});
   Future<LoginResponse> login({required LoginRequestModel data});
+  Future<bool> isLoggedIn();
 }
