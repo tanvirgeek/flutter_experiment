@@ -8,7 +8,6 @@ import 'package:flutter_experiment/features/auth/data/repositories/auth_reposito
 import 'package:flutter_experiment/features/auth/domain/usecases/register_usecase.dart';
 import 'package:flutter_experiment/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:flutter_experiment/features/auth/presentation/screens/login_screen.dart';
-import 'package:flutter_experiment/features/auth/presentation/screens/register_screen.dart';
 
 void main() {
   final dio = Dio(BaseOptions(baseUrl: 'http://localhost:3000'));

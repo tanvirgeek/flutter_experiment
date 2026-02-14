@@ -6,7 +6,6 @@ import 'package:flutter_experiment/core/validator/validators.dart';
 import 'package:flutter_experiment/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:flutter_experiment/features/auth/presentation/bloc/auth_event.dart';
 import 'package:flutter_experiment/features/auth/presentation/bloc/auth_state.dart';
-import 'package:flutter_experiment/features/auth/presentation/screens/login_screen.dart';
 import 'package:flutter_experiment/features/auth/presentation/widgets/auth_text_field.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -51,8 +50,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             context,
           ).showSnackBar(SnackBar(content: Text(state.message)));
 
-          // Optional: Navigate to login screen
-          // Navigator.pushReplacementNamed(context, '/login');
+          Navigator.pop(context);
         }
 
         if (state is AuthFailure) {
