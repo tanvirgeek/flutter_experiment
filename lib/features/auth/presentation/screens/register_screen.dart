@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_experiment/core/Theme/theme_text_extension.dart';
@@ -5,6 +6,7 @@ import 'package:flutter_experiment/core/validator/validators.dart';
 import 'package:flutter_experiment/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:flutter_experiment/features/auth/presentation/bloc/auth_event.dart';
 import 'package:flutter_experiment/features/auth/presentation/bloc/auth_state.dart';
+import 'package:flutter_experiment/features/auth/presentation/screens/login_screen.dart';
 import 'package:flutter_experiment/features/auth/presentation/widgets/auth_text_field.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -63,6 +65,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         final isLoading = state is AuthLoading;
 
         return Scaffold(
+          appBar: AppBar(),
           body: Center(
             child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -125,6 +128,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   ),
                                 )
                               : const Text("Sign Up"),
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+                      RichText(
+                        text: TextSpan(
+                          style: context.bodyLargeOnSurface(),
+                          children: [
+                            const TextSpan(text: "Don't have an account? "),
+                            TextSpan(
+                              text: "Login",
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.primary,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () {
+                                  Navigator.pop(context);
+                                },
+                            ),
+                          ],
                         ),
                       ),
                     ],

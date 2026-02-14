@@ -7,6 +7,7 @@ import 'package:flutter_experiment/features/auth/data/datasource/auth_remote_dat
 import 'package:flutter_experiment/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:flutter_experiment/features/auth/domain/usecases/register_usecase.dart';
 import 'package:flutter_experiment/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:flutter_experiment/features/auth/presentation/screens/login_screen.dart';
 import 'package:flutter_experiment/features/auth/presentation/screens/register_screen.dart';
 
 void main() {
@@ -32,7 +33,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: AppTheme.darkTheme,
-      home: const RegisterScreen(),
+      home: const LoginScreen(),
     );
   }
 }
