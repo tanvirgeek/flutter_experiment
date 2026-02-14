@@ -2,11 +2,7 @@ import 'package:flutter_experiment/core/network/api_client.dart';
 import 'package:flutter_experiment/features/auth/data/models/register_response_model.dart';
 
 abstract interface class AuthRemoteDataSource {
-  Future<RegisterResponseModel> register({
-    required String email,
-    required String password,
-    required String name,
-  });
+  Future<RegisterResponseModel> register({required RegisterRequestModel data});
 }
 
 class AuthRemoteDatasourceImpl implements AuthRemoteDataSource {
@@ -16,13 +12,11 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDataSource {
 
   @override
   Future<RegisterResponseModel> register({
-    required String email,
-    required String password,
-    required String name,
+    required RegisterRequestModel data,
   }) async {
     final response = await apiClient.post(
       '/auth/register',
-      data: {"email": email, "password": password, "name": name},
+      data: {"email": data.email, "password": data.password, "name": data.name},
     );
 
     return RegisterResponseModel.fromJson(response.data);

@@ -7,3 +7,15 @@ class RegisterResponseModel extends RegisterResponse {
     return RegisterResponseModel(message: json['message']);
   }
 }
+
+class RegisterRequestModel extends RegisterRequestDto {
+  RegisterRequestModel({
+    required super.email,
+    required super.password,
+    required super.name,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {'email': email, 'password': password, 'name': name};
+  }
+}

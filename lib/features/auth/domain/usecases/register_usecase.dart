@@ -1,3 +1,4 @@
+import 'package:flutter_experiment/features/auth/data/models/register_response_model.dart';
 import 'package:flutter_experiment/features/auth/domain/entities/register_response.dart';
 import 'package:flutter_experiment/features/auth/domain/repositories/auth_repository.dart';
 
@@ -20,6 +21,8 @@ class RegisterUsecaseImpl implements RegisterUsecase {
     required String password,
     required String name,
   }) {
-    return authRepo.register(name: name, email: email, password: password);
+    return authRepo.register(
+      data: RegisterRequestModel(email: email, password: password, name: name),
+    );
   }
 }

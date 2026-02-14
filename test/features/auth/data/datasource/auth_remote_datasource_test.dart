@@ -24,8 +24,7 @@ void main() {
   final responseData = {"message": "Registered successfully"};
 
   test("returns RegisterResponseModel on success", () async {
-    when(() => mockApiClient.post(any(), data: any(named: 'data')))
-        .thenAnswer(
+    when(() => mockApiClient.post(any(), data: any(named: 'data'))).thenAnswer(
       (_) async => Response(
         requestOptions: RequestOptions(path: ''),
         data: responseData,
@@ -34,9 +33,7 @@ void main() {
     );
 
     final result = await datasource.register(
-      email: email,
-      password: password,
-      name: name,
+      data: RegisterRequestModel(email: email, password: password, name: name),
     );
 
     expect(result, isA<RegisterResponseModel>());
@@ -44,14 +41,17 @@ void main() {
   });
 
   test("throws ServerException on failure", () async {
-    when(() => mockApiClient.post(any(), data: any(named: 'data')))
-        .thenThrow(ServerException("Something went wrong!"));
+    when(
+      () => mockApiClient.post(any(), data: any(named: 'data')),
+    ).thenThrow(ServerException("Something went wrong!"));
 
     expect(
       () => datasource.register(
-        email: email,
-        password: password,
-        name: name,
+        data: RegisterRequestModel(
+          email: email,
+          password: password,
+          name: name,
+        ),
       ),
       throwsA(isA<ServerException>()),
     );

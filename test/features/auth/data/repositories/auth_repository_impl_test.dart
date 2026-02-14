@@ -23,38 +23,50 @@ void main() {
   final model = RegisterResponseModel(message: "Success");
 
   test("returns RegisterResponse when datasource succeeds", () async {
-    when(() => mockDataSource.register(
+    when(
+      () => mockDataSource.register(
+        data: RegisterRequestModel(
           email: email,
           password: password,
           name: name,
-        )).thenAnswer((_) async => model);
+        ),
+      ),
+    ).thenAnswer((_) async => model);
 
     final result = await repository.register(
-      email: email,
-      password: password,
-      name: name,
+      data: RegisterRequestModel(email: email, password: password, name: name),
     );
 
     expect(result.message, "Success");
-    verify(() => mockDataSource.register(
+    verify(
+      () => mockDataSource.register(
+        data: RegisterRequestModel(
           email: email,
           password: password,
           name: name,
-        )).called(1);
+        ),
+      ),
+    ).called(1);
   });
 
   test("throws exception when datasource fails", () async {
-    when(() => mockDataSource.register(
+    when(
+      () => mockDataSource.register(
+        data: RegisterRequestModel(
           email: email,
           password: password,
           name: name,
-        )).thenThrow(ServerException("Something went wrong!"));
+        ),
+      ),
+    ).thenThrow(ServerException("Something went wrong!"));
 
     expect(
       () => repository.register(
-        email: email,
-        password: password,
-        name: name,
+        data: RegisterRequestModel(
+          email: email,
+          password: password,
+          name: name,
+        ),
       ),
       throwsA(isA<ServerException>()),
     );
