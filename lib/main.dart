@@ -12,9 +12,7 @@ import 'package:flutter_experiment/features/auth/domain/usecases/register_usecas
 import 'package:flutter_experiment/features/auth/domain/usecases/refresh_token_usecase.dart';
 import 'package:flutter_experiment/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:flutter_experiment/features/auth/presentation/bloc/auth_event.dart';
-import 'package:flutter_experiment/features/auth/presentation/bloc/auth_state.dart';
-import 'package:flutter_experiment/features/auth/presentation/screens/login_screen.dart';
-import 'package:flutter_experiment/features/blogs/presentation/screens/blogs_screen.dart';
+import 'package:flutter_experiment/features/shared/screens/splash_screen.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 void main() {
@@ -66,32 +64,6 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: AppTheme.darkTheme,
       home: const SplashScreen(),
-    );
-  }
-}
-
-class SplashScreen extends StatelessWidget {
-  const SplashScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: BlocListener<AuthBloc, AuthState>(
-        listener: (context, state) {
-          if (state is AuthenticatedState) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (_) => const BlogsScreen()),
-            );
-          } else if (state is UnauthenticatedState) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (_) => const LoginScreen()),
-            );
-          }
-        },
-        child: const Center(child: CircularProgressIndicator()),
-      ),
     );
   }
 }
