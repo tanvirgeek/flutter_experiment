@@ -19,8 +19,8 @@ class DioApiClient implements ApiClient {
       debugPrint(e.response.toString());
       if (e.response != null &&
           e.response!.data != null &&
-          e.response!.data["message"] != null) {
-        throw ServerException(e.response!.data["message"]);
+          e.response!.data["error"] != null) {
+        throw ServerException(e.response!.data["error"]);
       }
 
       throw ServerException("Something went wrong!");

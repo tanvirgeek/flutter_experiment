@@ -5,6 +5,7 @@ import 'package:flutter_experiment/core/Theme/theme.dart';
 import 'package:flutter_experiment/core/network/api_client.dart';
 import 'package:flutter_experiment/features/auth/data/datasource/auth_remote_datasource.dart';
 import 'package:flutter_experiment/features/auth/data/repositories/auth_repository_impl.dart';
+import 'package:flutter_experiment/features/auth/domain/usecases/login_usecase.dart';
 import 'package:flutter_experiment/features/auth/domain/usecases/register_usecase.dart';
 import 'package:flutter_experiment/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:flutter_experiment/features/auth/presentation/screens/login_screen.dart';
@@ -15,10 +16,14 @@ void main() {
   final dataSource = AuthRemoteDatasourceImpl(apiClient: apiClient);
   final authRepo = AuthRepositoryImpl(remoteDataSource: dataSource);
   final registerUseCase = RegisterUsecaseImpl(authRepo: authRepo);
+  final loginUsecase = LoginUsecaseImpl(authRepository: authRepo);
 
   runApp(
     BlocProvider(
-      create: (_) => AuthBloc(registerUseCase),
+      create: (_) => AuthBloc(
+        loginUsecase: loginUsecase,
+        registerUseCase: registerUseCase,
+      ),
       child: const MyApp(),
     ),
   );

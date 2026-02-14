@@ -1,6 +1,7 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_experiment/core/error/exceptions.dart';
 import 'package:flutter_experiment/features/auth/domain/entities/register_response.dart';
+import 'package:flutter_experiment/features/auth/domain/usecases/login_usecase.dart';
 import 'package:flutter_experiment/features/auth/domain/usecases/register_usecase.dart';
 import 'package:flutter_experiment/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:flutter_experiment/features/auth/presentation/bloc/auth_event.dart';
@@ -10,14 +11,20 @@ import 'package:mocktail/mocktail.dart';
 
 class MockRegisterUseCase extends Mock implements RegisterUsecase {}
 
+class MockLoginUseCase extends Mock implements LoginUsecase {}
 
 void main() {
   late AuthBloc bloc;
   late MockRegisterUseCase mockUseCase;
+  late MockLoginUseCase mockLoginUseCase;
 
   setUp(() {
     mockUseCase = MockRegisterUseCase();
-    bloc = AuthBloc(mockUseCase);
+    mockLoginUseCase = MockLoginUseCase();
+    bloc = AuthBloc(
+      loginUsecase: mockLoginUseCase,
+      registerUseCase: mockUseCase,
+    );
   });
 
   const email = "test@gmail.com";
@@ -29,42 +36,28 @@ void main() {
   blocTest<AuthBloc, AuthState>(
     "emits [Loading, Success] when registration succeeds",
     build: () {
-      when(() => mockUseCase(
-            email: email,
-            password: password,
-            name: name,
-          )).thenAnswer((_) async => entity);
+      when(
+        () => mockUseCase(email: email, password: password, name: name),
+      ).thenAnswer((_) async => entity);
       return bloc;
     },
-    act: (bloc) => bloc.add(RegisterRequested(
-      email: email,
-      password: password,
-      name: name,
-    )),
-    expect: () => [
-      isA<AuthLoading>(),
-      isA<AuthSuccess>(),
-    ],
+    act: (bloc) => bloc.add(
+      RegisterRequested(email: email, password: password, name: name),
+    ),
+    expect: () => [isA<AuthLoading>(), isA<AuthSuccess>()],
   );
 
   blocTest<AuthBloc, AuthState>(
     "emits [Loading, Failure] when registration fails",
     build: () {
-      when(() => mockUseCase(
-            email: email,
-            password: password,
-            name: name,
-          )).thenThrow(ServerException("Something went wrong!"));
+      when(
+        () => mockUseCase(email: email, password: password, name: name),
+      ).thenThrow(ServerException("Something went wrong!"));
       return bloc;
     },
-    act: (bloc) => bloc.add(RegisterRequested(
-      email: email,
-      password: password,
-      name: name,
-    )),
-    expect: () => [
-      isA<AuthLoading>(),
-      isA<AuthFailure>(),
-    ],
+    act: (bloc) => bloc.add(
+      RegisterRequested(email: email, password: password, name: name),
+    ),
+    expect: () => [isA<AuthLoading>(), isA<AuthFailure>()],
   );
 }

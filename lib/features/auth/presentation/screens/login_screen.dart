@@ -1,7 +1,11 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_experiment/core/Theme/theme_text_extension.dart';
 import 'package:flutter_experiment/core/validator/validators.dart';
+import 'package:flutter_experiment/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:flutter_experiment/features/auth/presentation/bloc/auth_event.dart';
+import 'package:flutter_experiment/features/auth/presentation/bloc/auth_state.dart';
 import 'package:flutter_experiment/features/auth/presentation/screens/register_screen.dart';
 import 'package:flutter_experiment/features/auth/presentation/widgets/auth_text_field.dart';
 
@@ -18,7 +22,12 @@ class _LoginScreenState extends State<LoginScreen> {
   final _passwordController = TextEditingController();
   void _onLoginSubmit() {
     if (_loignFormKey.currentState!.validate()) {
-      debugPrint("Login Success");
+      context.read<AuthBloc>().add(
+        LoginRequested(
+          email: _emailController.text.trim(),
+          password: _passwordController.text.trim(),
+        ),
+      );
     }
   }
 
@@ -31,72 +40,93 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsetsGeometry.all(32),
-            child: Form(
-              key: _loignFormKey,
-              child: Column(
-                mainAxisAlignment: .center,
-                mainAxisSize: .min,
-                children: [
-                  Text("Login To Continue", style: context.headlinePrimary()),
-                  const SizedBox(height: 24),
-                  AuthTextField(
-                    controller: _emailController,
-                    label: "Email",
-                    keyboardType: .emailAddress,
-                    validator: Validators.email,
-                  ),
-                  const SizedBox(height: 24),
-                  AuthTextField(
-                    controller: _passwordController,
-                    label: "Password",
-                    isPassword: true,
-                    validator: Validators.password,
-                  ),
-                  const SizedBox(height: 24),
-                  ElevatedButton(
-                    onPressed: () {
-                      _onLoginSubmit();
-                    },
-                    child: const Text("Login"),
-                  ),
+    return BlocConsumer<AuthBloc, AuthState>(
+      listener: (context, state) {
+        if (state is LoginSuccess) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text("Success")));
+        }
 
-                  const SizedBox(height: 24),
+        if (state is AuthFailure) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.error)));
+        }
+      },
+      builder: (context, state) {
+        final isLoading = state is AuthLoading;
 
-                  RichText(
-                    text: TextSpan(
-                      style: context.bodyLargeOnSurface(),
-                      children: [
-                        const TextSpan(text: "Don't have an account? "),
-                        TextSpan(
-                          text: "Register",
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.primary,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const RegisterScreen(),
-                                ),
-                              );
-                            },
+        return Scaffold(
+          body: Center(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsetsGeometry.all(32),
+                child: Form(
+                  key: _loignFormKey,
+                  child: Column(
+                    mainAxisAlignment: .center,
+                    mainAxisSize: .min,
+                    children: [
+                      Text(
+                        "Login To Continue",
+                        style: context.headlinePrimary(),
+                      ),
+                      const SizedBox(height: 24),
+                      AuthTextField(
+                        controller: _emailController,
+                        label: "Email",
+                        keyboardType: .emailAddress,
+                        validator: Validators.email,
+                      ),
+                      const SizedBox(height: 24),
+                      AuthTextField(
+                        controller: _passwordController,
+                        label: "Password",
+                        isPassword: true,
+                        validator: Validators.password,
+                      ),
+                      const SizedBox(height: 24),
+                      ElevatedButton(
+                        onPressed: isLoading ? null : _onLoginSubmit,
+                        child: const Text("Login"),
+                      ),
+
+                      const SizedBox(height: 24),
+
+                      RichText(
+                        text: TextSpan(
+                          style: context.bodyLargeOnSurface(),
+                          children: [
+                            const TextSpan(text: "Don't have an account? "),
+                            TextSpan(
+                              text: "Register",
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.primary,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const RegisterScreen(),
+                                    ),
+                                  );
+                                },
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
