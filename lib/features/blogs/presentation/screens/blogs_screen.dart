@@ -65,12 +65,12 @@ class _BlogsScreenState extends State<BlogsScreen> {
                   );
                 }
 
-                // if (state.currentPage < state.totalPages) {
-                //   return const Padding(
-                //     padding: EdgeInsets.all(16),
-                //     child: Center(child: CircularProgressIndicator()),
-                //   );
-                // }
+                if (state.isLoadingMore) {
+                  return const Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Center(child: CircularProgressIndicator()),
+                  );
+                }
 
                 return const SizedBox();
               },
