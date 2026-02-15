@@ -16,6 +16,7 @@ import 'package:flutter_experiment/features/shared/screens/splash_screen.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   final dio = DioSingleton().dio;
   final apiClient = DioApiClient(dio);
 
