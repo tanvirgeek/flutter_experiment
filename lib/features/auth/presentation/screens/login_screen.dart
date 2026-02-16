@@ -2,19 +2,13 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_experiment/core/Theme/theme_text_extension.dart';
-import 'package:flutter_experiment/core/network/api_client.dart';
-import 'package:flutter_experiment/core/network/dio_interceptor.dart';
 import 'package:flutter_experiment/core/validator/validators.dart';
 import 'package:flutter_experiment/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:flutter_experiment/features/auth/presentation/bloc/auth_event.dart';
 import 'package:flutter_experiment/features/auth/presentation/bloc/auth_state.dart';
 import 'package:flutter_experiment/features/auth/presentation/screens/register_screen.dart';
 import 'package:flutter_experiment/features/auth/presentation/widgets/auth_text_field.dart';
-import 'package:flutter_experiment/features/blogs/data/datasource/blog_remote_datasource.dart';
-import 'package:flutter_experiment/features/blogs/data/repositories/blogs_repository.dart';
-import 'package:flutter_experiment/features/blogs/domain/usecases/blogs_usecase.dart';
-import 'package:flutter_experiment/features/blogs/presentation/bloc/blogs_bloc.dart';
-import 'package:flutter_experiment/features/blogs/presentation/screens/blogs_screen.dart';
+import 'package:flutter_experiment/features/shared/screens/bottom_navigation_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -50,17 +44,9 @@ class _LoginScreenState extends State<LoginScreen> {
     return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is LoginSuccess) {
-          final dio = DioSingleton().dio;
-          final apiClient = DioApiClient(dio);
-          final remoteDataSource = BlogRemoteDataSourceImpl(apiClient);
-          final repository = BlogRepositoryImpl(remoteDataSource);
-          final getBlogsUseCase = GetBlogsUseCaseImpl(repository);
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(
-              builder: (context) => BlocProvider(
-                create: (context) => BlogBloc(getBlogsUseCase),
-                child: const BlogsScreen(),
-              ),
+              builder: (context) => const BottomNavigationScreen(),
             ),
           );
         }
