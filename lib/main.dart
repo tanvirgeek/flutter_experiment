@@ -8,6 +8,7 @@ import 'package:flutter_experiment/features/auth/data/datasource/auth_remote_dat
 import 'package:flutter_experiment/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:flutter_experiment/features/auth/domain/usecases/check_auth_usecase.dart';
 import 'package:flutter_experiment/features/auth/domain/usecases/login_usecase.dart';
+import 'package:flutter_experiment/features/auth/domain/usecases/logout_usecase.dart';
 import 'package:flutter_experiment/features/auth/domain/usecases/register_usecase.dart';
 import 'package:flutter_experiment/features/auth/domain/usecases/refresh_token_usecase.dart';
 import 'package:flutter_experiment/features/auth/presentation/bloc/auth_bloc.dart';
@@ -32,6 +33,7 @@ void main() {
   final loginUsecase = LoginUsecaseImpl(authRepository: authRepo);
   final checkAuthUseCase = CheckAuthUseCaseImpl(repository: authRepo);
   final refreshTokenUseCase = RefreshTokenUsecaseImpl(repository: authRepo);
+  final logoutUsecase = LogoutUsecaseImpl(authRepository: authRepo);
 
   // Add interceptor for auto token refresh
   dio.interceptors.add(
@@ -50,6 +52,7 @@ void main() {
         checkAuthUseCase: checkAuthUseCase,
         refreshTokenUsecase: refreshTokenUseCase,
         localDataSource: localDataSource,
+        logoutUsecase: logoutUsecase,
       )..add(CheckAuthStatusEvent()), // Immediately check auth on app start
       child: const MyApp(),
     ),

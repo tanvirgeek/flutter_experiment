@@ -4,6 +4,7 @@ import 'package:flutter_experiment/core/validator/validators.dart';
 import 'package:flutter_experiment/features/auth/data/datasource/auth_local_datasource.dart';
 import 'package:flutter_experiment/features/auth/domain/usecases/check_auth_usecase.dart';
 import 'package:flutter_experiment/features/auth/domain/usecases/login_usecase.dart';
+import 'package:flutter_experiment/features/auth/domain/usecases/logout_usecase.dart';
 import 'package:flutter_experiment/features/auth/domain/usecases/register_usecase.dart';
 import 'package:flutter_experiment/features/auth/domain/usecases/refresh_token_usecase.dart';
 import 'auth_event.dart';
@@ -15,6 +16,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final CheckAuthUseCase checkAuthUseCase;
   final RefreshTokenUsecase refreshTokenUsecase;
   final AuthLocalDataSource localDataSource;
+  final LogoutUsecase logoutUsecase;
 
   AuthBloc({
     required this.loginUsecase,
@@ -22,18 +24,27 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     required this.checkAuthUseCase,
     required this.refreshTokenUsecase,
     required this.localDataSource,
+    required this.logoutUsecase,
   }) : super(AuthInitial()) {
     on<RegisterRequested>(_onRegister);
     on<LoginRequested>(_onLogin);
     on<CheckAuthStatusEvent>(_onCheckAuthenticated);
     on<RefreshTokenEvent>(_onRefreshToken);
+    on<LogoutRequested>(_onLogout);
+  }
+
+  Future<void> _onLogout(LogoutRequested event, Emitter<AuthState> emit) async {
+    emit(AuthLoading());
+    final refreshToken = await localDataSource.getRefreshToken();
+    await logoutUsecase.call(refreshToken: refreshToken);
+    await localDataSource.clearTokens();
+    emit(OnLogoutSuccess());
   }
 
   Future<void> _onCheckAuthenticated(
     CheckAuthStatusEvent event,
     Emitter<AuthState> emit,
   ) async {
-    
     emit(AuthLoading());
 
     try {

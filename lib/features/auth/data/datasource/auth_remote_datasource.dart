@@ -1,6 +1,7 @@
 import 'package:flutter_experiment/core/error/exceptions.dart';
 import 'package:flutter_experiment/core/network/api_client.dart';
 import 'package:flutter_experiment/features/auth/data/models/login_response_model.dart';
+import 'package:flutter_experiment/features/auth/data/models/logout_model.dart';
 import 'package:flutter_experiment/features/auth/data/models/register_response_model.dart';
 import 'package:flutter_experiment/features/auth/domain/entities/auth_tokens.dart';
 
@@ -8,6 +9,7 @@ abstract interface class AuthRemoteDataSource {
   Future<RegisterResponseModel> register({required RegisterRequestModel data});
   Future<LoginResponseModel> login({required LoginRequestModel data});
   Future<AuthTokens> refreshToken({required String refreshToken});
+  Future<LogoutResponseModel> logout({required LogoutRequestModel data});
 }
 
 class AuthRemoteDatasourceImpl implements AuthRemoteDataSource {
@@ -28,20 +30,19 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDataSource {
 
   @override
   Future<LoginResponseModel> login({required LoginRequestModel data}) async {
-    final response = await apiClient.post(
-      "/auth/login",
-      data: data.toJson(),
-    );
+    final response = await apiClient.post("/auth/login", data: data.toJson());
     return LoginResponseModel.fromJson(response.data);
   }
 
   @override
   Future<AuthTokens> refreshToken({required String refreshToken}) async {
-    final response = await apiClient.post("/auth/refresh", data: {
-      "refreshToken": refreshToken,
-    });
+    final response = await apiClient.post(
+      "/auth/refresh",
+      data: {"refreshToken": refreshToken},
+    );
 
-    if (response.data["accessToken"] == null || response.data["refreshToken"] == null) {
+    if (response.data["accessToken"] == null ||
+        response.data["refreshToken"] == null) {
       throw ServerException("Invalid refresh response");
     }
 
@@ -50,5 +51,10 @@ class AuthRemoteDatasourceImpl implements AuthRemoteDataSource {
       refreshToken: response.data["refreshToken"],
     );
   }
-}
 
+  @override
+  Future<LogoutResponseModel> logout({required LogoutRequestModel data}) async {
+    final response = await apiClient.post("/auth/logout", data: data.toJson());
+    return LogoutResponseModel.fromJson(response.data);
+  }
+}

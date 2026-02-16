@@ -34,3 +34,5 @@ class TokenRefreshedState extends AuthState {
 
   TokenRefreshedState({required this.accessToken, required this.refreshToken});
 }
+
+class OnLogoutSuccess extends AuthState {}

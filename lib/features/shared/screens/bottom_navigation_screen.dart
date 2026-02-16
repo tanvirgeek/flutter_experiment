@@ -8,6 +8,7 @@ import 'package:flutter_experiment/features/blogs/data/repositories/blogs_reposi
 import 'package:flutter_experiment/features/blogs/domain/usecases/blogs_usecase.dart';
 import 'package:flutter_experiment/features/blogs/presentation/bloc/blogs_bloc.dart';
 import 'package:flutter_experiment/features/blogs/presentation/screens/blogs_screen.dart';
+import 'package:flutter_experiment/features/shared/screens/settings.dart';
 
 class BottomNavigationScreen extends StatelessWidget {
   const BottomNavigationScreen({super.key});
@@ -44,7 +45,7 @@ class _BottomNavBodyState extends State<_BottomNavBody> {
   final List<Widget> _screens = const [
     BlogsScreen(),
     Text("Offline"),
-    Text("Download"),
+    Settings()
   ];
 
   void _onTap(int index) {

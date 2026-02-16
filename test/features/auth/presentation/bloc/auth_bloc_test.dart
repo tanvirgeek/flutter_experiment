@@ -3,6 +3,7 @@ import 'package:flutter_experiment/core/error/exceptions.dart';
 import 'package:flutter_experiment/features/auth/domain/entities/register_response.dart';
 import 'package:flutter_experiment/features/auth/domain/usecases/check_auth_usecase.dart';
 import 'package:flutter_experiment/features/auth/domain/usecases/login_usecase.dart';
+import 'package:flutter_experiment/features/auth/domain/usecases/logout_usecase.dart';
 import 'package:flutter_experiment/features/auth/domain/usecases/register_usecase.dart';
 import 'package:flutter_experiment/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:flutter_experiment/features/auth/presentation/bloc/auth_event.dart';
@@ -23,12 +24,15 @@ class MockRefreshUsecase extends Mock implements RefreshTokenUsecase {}
 
 class MockAuthLocalDataSource extends Mock implements AuthLocalDataSource {}
 
+class MockLogoutUsecase extends Mock implements LogoutUsecase {}
+
 void main() {
   late AuthBloc bloc;
   late MockRegisterUseCase mockUseCase;
   late MockLoginUseCase mockLoginUseCase;
   late MockCheckAuthUsecase mockCheckAuthUseCase;
   late MockRefreshUsecase mockRefreshUsecase;
+  late MockLogoutUsecase mockLogoutUsecase;
   late MockAuthLocalDataSource mockLocalDataSource;
 
   setUp(() {
@@ -37,6 +41,7 @@ void main() {
     mockCheckAuthUseCase = MockCheckAuthUsecase();
     mockRefreshUsecase = MockRefreshUsecase();
     mockLocalDataSource = MockAuthLocalDataSource();
+    mockLogoutUsecase = MockLogoutUsecase();
 
     bloc = AuthBloc(
       loginUsecase: mockLoginUseCase,
@@ -44,6 +49,7 @@ void main() {
       checkAuthUseCase: mockCheckAuthUseCase,
       refreshTokenUsecase: mockRefreshUsecase,
       localDataSource: mockLocalDataSource,
+      logoutUsecase: mockLogoutUsecase,
     );
   });
 

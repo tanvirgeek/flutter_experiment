@@ -1,6 +1,7 @@
 import 'package:flutter_experiment/features/auth/data/datasource/auth_local_datasource.dart';
 import 'package:flutter_experiment/features/auth/data/datasource/auth_remote_datasource.dart';
 import 'package:flutter_experiment/features/auth/data/models/login_response_model.dart';
+import 'package:flutter_experiment/features/auth/data/models/logout_model.dart';
 import 'package:flutter_experiment/features/auth/data/models/register_response_model.dart';
 import 'package:flutter_experiment/features/auth/domain/entities/auth_tokens.dart';
 import 'package:flutter_experiment/features/auth/domain/entities/login_response.dart';
@@ -47,5 +48,10 @@ class AuthRepositoryImpl implements AuthRepository {
       refreshToken: tokens.refreshToken,
     );
     return tokens;
+  }
+
+  @override
+  Future<LogoutResponseModel> logout({required LogoutRequestModel data}) {
+    return remoteDataSource.logout(data: data);
   }
 }

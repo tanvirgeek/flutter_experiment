@@ -30,3 +30,6 @@ class RefreshTokenEvent extends AuthEvent {
 
   RefreshTokenEvent({required this.refreshToken});
 }
+
+class LogoutRequested extends AuthEvent {
+}
