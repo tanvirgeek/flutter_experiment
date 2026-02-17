@@ -52,3 +52,16 @@ class PaginatedBlogsModel {
     );
   }
 }
+
+class CreateBlogRequestModel {
+  final String title;
+  final String content;
+  final String? imagePath;
+
+  CreateBlogRequestModel({
+    required this.title,
+    required this.content,
+    this.imagePath,
+  });
+}
+

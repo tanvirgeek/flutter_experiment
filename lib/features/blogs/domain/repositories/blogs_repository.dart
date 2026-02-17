@@ -5,4 +5,9 @@ abstract interface class BlogRepository {
     required int page,
     required int limit,
   });
+  Future<BlogModel> createBlog({
+    required String title,
+    required String content,
+    String? imagePath,
+  });
 }

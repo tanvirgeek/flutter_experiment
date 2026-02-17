@@ -14,4 +14,21 @@ class BlogRepositoryImpl implements BlogRepository {
   }) async {
     return await remoteDataSource.getBlogs(page: page, limit: limit);
   }
+
+  @override
+  Future<BlogModel> createBlog({
+    required String title,
+    required String content,
+    String? imagePath,
+  }) async {
+    final model = await remoteDataSource.createBlog(
+      CreateBlogRequestModel(
+        title: title,
+        content: content,
+        imagePath: imagePath,
+      ),
+    );
+
+    return model; // since BlogModel extends Blog
+  }
 }

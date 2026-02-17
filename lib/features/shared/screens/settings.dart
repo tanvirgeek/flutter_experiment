@@ -33,7 +33,7 @@ class Settings extends StatelessWidget {
                 : () {
                     context.read<AuthBloc>().add(LogoutRequested());
                   },
-            child: const Text("Logout"),
+            child: isLoading ? const CircularProgressIndicator()  : const Text("Logout"),
           ),
         );
       },

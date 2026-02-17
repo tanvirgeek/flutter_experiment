@@ -6,6 +6,7 @@ import 'package:flutter_experiment/core/network/dio_interceptor.dart';
 import 'package:flutter_experiment/features/blogs/data/datasource/blog_remote_datasource.dart';
 import 'package:flutter_experiment/features/blogs/data/repositories/blogs_repository.dart';
 import 'package:flutter_experiment/features/blogs/domain/usecases/blogs_usecase.dart';
+import 'package:flutter_experiment/features/blogs/domain/usecases/create_blog_usecase.dart';
 import 'package:flutter_experiment/features/blogs/presentation/bloc/blogs_bloc.dart';
 import 'package:flutter_experiment/features/blogs/presentation/screens/blogs_screen.dart';
 import 'package:flutter_experiment/features/shared/screens/settings.dart';
@@ -24,9 +25,17 @@ class BottomNavigationScreen extends StatelessWidget {
     final blogRepository = BlogRepositoryImpl(blogRemoteDataSource);
 
     final getBlogsUseCase = GetBlogsUseCaseImpl(blogRepository);
+    final createBlogUseCase = CreateBlogUseCaseImpl(blogRepository);
 
     return MultiBlocProvider(
-      providers: [BlocProvider(create: (_) => BlogBloc(getBlogsUseCase))],
+      providers: [
+        BlocProvider(
+          create: (_) => BlogBloc(
+            getBlogsUseCase: getBlogsUseCase,
+            createBlogUseCase: createBlogUseCase,
+          ),
+        ),
+      ],
       child: const _BottomNavBody(),
     );
   }
@@ -45,7 +54,7 @@ class _BottomNavBodyState extends State<_BottomNavBody> {
   final List<Widget> _screens = const [
     BlogsScreen(),
     Text("Offline"),
-    Settings()
+    Settings(),
   ];
 
   void _onTap(int index) {

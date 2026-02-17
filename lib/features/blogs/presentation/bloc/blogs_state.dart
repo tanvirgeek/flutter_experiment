@@ -39,3 +39,18 @@ class BlogError extends BlogState {
 
   BlogError(this.message);
 }
+
+class BlogCreating extends BlogState {}
+
+class BlogCreateSuccess extends BlogState {
+  final BlogModel blog;
+
+  BlogCreateSuccess(this.blog);
+}
+
+class BlogCreateFailure extends BlogState {
+  final String message;
+
+  BlogCreateFailure(this.message);
+}
+

@@ -1,16 +1,20 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_experiment/features/blogs/domain/usecases/blogs_usecase.dart';
+import 'package:flutter_experiment/features/blogs/domain/usecases/create_blog_usecase.dart';
 import 'package:flutter_experiment/features/blogs/presentation/bloc/blogs_event.dart';
 import 'package:flutter_experiment/features/blogs/presentation/bloc/blogs_state.dart';
 
 class BlogBloc extends Bloc<BlogEvent, BlogState> {
   final GetBlogsUseCase getBlogsUseCase;
+  final CreateBlogUseCase createBlogUseCase;
 
   static const int _limit = 10;
 
-  BlogBloc(this.getBlogsUseCase) : super(BlogInitial()) {
+  BlogBloc({required this.getBlogsUseCase, required this.createBlogUseCase})
+    : super(BlogInitial()) {
     on<FetchBlogsEvent>(_onFetchBlogs);
     on<LoadMoreBlogsEvent>(_onLoadMoreBlogs);
+    on<CreateBlogEvent>(_onCreateBlog);
   }
 
   Future<void> _onFetchBlogs(
@@ -70,6 +74,25 @@ class BlogBloc extends Bloc<BlogEvent, BlogState> {
       } catch (_) {
         emit(currentState.copyWith(isLoadingMore: false));
       }
+    }
+  }
+
+  Future<void> _onCreateBlog(
+    CreateBlogEvent event,
+    Emitter<BlogState> emit,
+  ) async {
+    emit(BlogCreating());
+
+    try {
+      final blog = await createBlogUseCase.call(
+        title: event.title,
+        content: event.content,
+        imagePath: event.imagePath,
+      );
+
+      emit(BlogCreateSuccess(blog));
+    } catch (e) {
+      emit(BlogCreateFailure(e.toString()));
     }
   }
 }
