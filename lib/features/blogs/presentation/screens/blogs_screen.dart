@@ -2,9 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_experiment/features/blogs/data/models/blog_model.dart';
 import 'package:flutter_experiment/features/blogs/presentation/bloc/blogs_bloc.dart';
 import 'package:flutter_experiment/features/blogs/presentation/bloc/blogs_event.dart';
 import 'package:flutter_experiment/features/blogs/presentation/bloc/blogs_state.dart';
+import 'package:flutter_experiment/features/blogs/presentation/screens/blog_detail_screen.dart';
 import 'package:image_picker/image_picker.dart';
 
 class BlogsScreen extends StatefulWidget {
@@ -32,18 +34,26 @@ class _BlogsScreenState extends State<BlogsScreen> {
     }
   }
 
-  void _openCreateBlogModal() {
-  final blogBloc = context.read<BlogBloc>();
+  void _gotoBlogDetailScreen(BlogModel blog) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) {
+          return BlogDetailScreen(blog: blog);
+        },
+      ),
+    );
+  }
 
-  showModalBottomSheet(
-    context: context,
-    isScrollControlled: true,
-    builder: (_) => BlocProvider.value(
-      value: blogBloc,
-      child: const _CreateBlogModal(),
-    ),
-  );
-}
+  void _openCreateBlogModal() {
+    final blogBloc = context.read<BlogBloc>();
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (_) =>
+          BlocProvider.value(value: blogBloc, child: const _CreateBlogModal()),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -95,6 +105,9 @@ class _BlogsScreenState extends State<BlogsScreen> {
                     if (index < blogs.length) {
                       final blog = blogs[index];
                       return ListTile(
+                        onTap: () {
+                          _gotoBlogDetailScreen(blog);
+                        },
                         title: Text(blog.title),
                         subtitle: Text(blog.content),
                       );

@@ -5,12 +5,13 @@ import 'package:flutter_experiment/features/auth/domain/usecases/refresh_token_u
 
 class DioSingleton {
   static final DioSingleton _instance = DioSingleton._internal();
+  static const String baseUrl = 'http://localhost:3000';
   late final Dio dio;
 
   factory DioSingleton() => _instance;
 
   DioSingleton._internal() {
-    dio = Dio(BaseOptions(baseUrl: 'http://localhost:3000'));
+    dio = Dio(BaseOptions(baseUrl: baseUrl));
   }
 }
 
