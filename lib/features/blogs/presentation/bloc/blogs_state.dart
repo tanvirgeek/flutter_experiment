@@ -54,3 +54,14 @@ class BlogCreateFailure extends BlogState {
   BlogCreateFailure(this.message);
 }
 
+class BlogDeleting extends BlogState {}
+
+class BlogDeleteSuccess extends BlogState {
+  final String message;
+  BlogDeleteSuccess({required this.message});
+}
+
+class BlogDeleteFailure extends BlogState {
+  final String message;
+  BlogDeleteFailure({required this.message});
+}

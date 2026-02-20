@@ -65,3 +65,12 @@ class CreateBlogRequestModel {
   });
 }
 
+class BlogDeleteMessageModel {
+  final String message;
+
+  BlogDeleteMessageModel({required this.message});
+  
+  factory BlogDeleteMessageModel.fromJson(Map<String, dynamic> json) {
+    return BlogDeleteMessageModel(message: json["message"]);
+  }
+}

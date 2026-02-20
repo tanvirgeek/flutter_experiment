@@ -7,6 +7,7 @@ import 'package:flutter_experiment/features/blogs/data/datasource/blog_remote_da
 import 'package:flutter_experiment/features/blogs/data/repositories/blogs_repository.dart';
 import 'package:flutter_experiment/features/blogs/domain/usecases/blogs_usecase.dart';
 import 'package:flutter_experiment/features/blogs/domain/usecases/create_blog_usecase.dart';
+import 'package:flutter_experiment/features/blogs/domain/usecases/delete_blog_usecase.dart';
 import 'package:flutter_experiment/features/blogs/presentation/bloc/blogs_bloc.dart';
 import 'package:flutter_experiment/features/blogs/presentation/screens/blogs_screen.dart';
 import 'package:flutter_experiment/features/shared/screens/settings.dart';
@@ -26,6 +27,7 @@ class BottomNavigationScreen extends StatelessWidget {
 
     final getBlogsUseCase = GetBlogsUseCaseImpl(blogRepository);
     final createBlogUseCase = CreateBlogUseCaseImpl(blogRepository);
+    final deleteBlogUseCase = DeleteBlogUsecaseImpl(repository: blogRepository);
 
     return MultiBlocProvider(
       providers: [
@@ -33,10 +35,11 @@ class BottomNavigationScreen extends StatelessWidget {
           create: (_) => BlogBloc(
             getBlogsUseCase: getBlogsUseCase,
             createBlogUseCase: createBlogUseCase,
+            deleteBlogUseCase: deleteBlogUseCase,
           ),
         ),
       ],
-      child: const _BottomNavBody(),
+      child: _BottomNavBody(),
     );
   }
 }
@@ -51,11 +54,7 @@ class _BottomNavBody extends StatefulWidget {
 class _BottomNavBodyState extends State<_BottomNavBody> {
   int _currentIndex = 0;
 
-  final List<Widget> _screens = const [
-    BlogsScreen(),
-    Text("Offline"),
-    Settings(),
-  ];
+  final List<Widget> _screens = [BlogsScreen(), Text("Offline"), Settings()];
 
   void _onTap(int index) {
     setState(() {

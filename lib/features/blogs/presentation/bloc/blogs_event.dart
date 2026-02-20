@@ -21,3 +21,8 @@ class CreateBlogEvent extends BlogEvent {
   });
 }
 
+class DeleteBlogEvent extends BlogEvent {
+  final String id;
+  DeleteBlogEvent({required this.id});
+}
+

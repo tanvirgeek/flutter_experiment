@@ -23,8 +23,11 @@ class _BlogsScreenState extends State<BlogsScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<BlogBloc>().add(FetchBlogsEvent(page: 1, limit: _limit));
     _scrollController.addListener(_onScroll);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<BlogBloc>().add(FetchBlogsEvent(page: 1, limit: _limit));
+    });
   }
 
   void _onScroll() {
@@ -34,14 +37,22 @@ class _BlogsScreenState extends State<BlogsScreen> {
     }
   }
 
-  void _gotoBlogDetailScreen(BlogModel blog) {
-    Navigator.of(context).push(
+  void _gotoBlogDetailScreen(BlogModel blog) async {
+    final blogBloc = context.read<BlogBloc>();
+
+    final deleted = await Navigator.of(context).push<bool>(
       MaterialPageRoute(
-        builder: (context) {
-          return BlogDetailScreen(blog: blog);
-        },
+        builder: (_) => BlocProvider.value(
+          value: blogBloc,
+          child: BlogDetailScreen(blog: blog),
+        ),
       ),
     );
+
+    if (deleted == true) {
+      // Re-fetch blogs when a blog was deleted
+      blogBloc.add(FetchBlogsEvent(page: 1, limit: _limit));
+    }
   }
 
   void _openCreateBlogModal() {

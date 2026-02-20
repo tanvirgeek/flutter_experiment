@@ -5,6 +5,7 @@ import 'package:flutter_experiment/features/blogs/data/models/blog_model.dart';
 abstract interface class BlogRemoteDataSource {
   Future<PaginatedBlogsModel> getBlogs({required int page, required int limit});
   Future<BlogModel> createBlog(CreateBlogRequestModel data);
+  Future<BlogDeleteMessageModel> deleteBlog(String id);
 }
 
 class BlogRemoteDataSourceImpl implements BlogRemoteDataSource {
@@ -37,5 +38,11 @@ class BlogRemoteDataSourceImpl implements BlogRemoteDataSource {
     final response = await apiClient.post("/blogs", data: formData);
 
     return BlogModel.fromJson(response.data);
+  }
+
+  @override
+  Future<BlogDeleteMessageModel> deleteBlog(String id) async {
+    final response = await apiClient.delete("/blogs", id);
+    return BlogDeleteMessageModel.fromJson(response.data);
   }
 }

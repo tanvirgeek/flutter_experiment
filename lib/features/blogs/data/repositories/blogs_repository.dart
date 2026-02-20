@@ -31,4 +31,10 @@ class BlogRepositoryImpl implements BlogRepository {
 
     return model; // since BlogModel extends Blog
   }
+
+  @override
+  Future<BlogDeleteMessageModel> deleteBlog({required String id}) async {
+    final blogDeleteResponse = await remoteDataSource.deleteBlog(id);
+    return blogDeleteResponse;
+  }
 }

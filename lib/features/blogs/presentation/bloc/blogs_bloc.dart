@@ -1,20 +1,40 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_experiment/features/blogs/domain/usecases/blogs_usecase.dart';
 import 'package:flutter_experiment/features/blogs/domain/usecases/create_blog_usecase.dart';
+import 'package:flutter_experiment/features/blogs/domain/usecases/delete_blog_usecase.dart';
 import 'package:flutter_experiment/features/blogs/presentation/bloc/blogs_event.dart';
 import 'package:flutter_experiment/features/blogs/presentation/bloc/blogs_state.dart';
 
 class BlogBloc extends Bloc<BlogEvent, BlogState> {
   final GetBlogsUseCase getBlogsUseCase;
   final CreateBlogUseCase createBlogUseCase;
+  final DeleteBlogUseCase deleteBlogUseCase;
 
   static const int _limit = 10;
 
-  BlogBloc({required this.getBlogsUseCase, required this.createBlogUseCase})
-    : super(BlogInitial()) {
+  BlogBloc({
+    required this.getBlogsUseCase,
+    required this.createBlogUseCase,
+    required this.deleteBlogUseCase,
+  }) : super(BlogInitial()) {
     on<FetchBlogsEvent>(_onFetchBlogs);
     on<LoadMoreBlogsEvent>(_onLoadMoreBlogs);
     on<CreateBlogEvent>(_onCreateBlog);
+    on<DeleteBlogEvent>(_onDeleteBlog);
+  }
+
+  Future<void> _onDeleteBlog(
+    DeleteBlogEvent event,
+    Emitter<BlogState> emit,
+  ) async {
+    emit(BlogDeleting());
+
+    try {
+      final resposne = await deleteBlogUseCase.call(id: event.id);
+      emit(BlogDeleteSuccess(message: resposne.message));
+    } catch (e) {
+      BlogCreateFailure(e.toString());
+    }
   }
 
   Future<void> _onFetchBlogs(

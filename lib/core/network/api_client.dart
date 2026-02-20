@@ -4,6 +4,7 @@ import 'package:flutter_experiment/core/error/exceptions.dart';
 abstract interface class ApiClient {
   Future<Response> post(String path, {dynamic data});
   Future<Response> get(String path, {Map<String, dynamic>? queryParameters});
+  Future<Response> delete(String path, String id);
 }
 
 class DioApiClient implements ApiClient {
@@ -27,6 +28,15 @@ class DioApiClient implements ApiClient {
   }) async {
     try {
       return await dio.get(path, queryParameters: queryParameters);
+    } on DioException catch (e) {
+      _handleError(e);
+    }
+  }
+
+  @override
+  Future<Response> delete(String path, String id) async {
+    try {
+      return await dio.delete('$path/$id');
     } on DioException catch (e) {
       _handleError(e);
     }
